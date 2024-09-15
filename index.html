@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoJo Tank Water Level</title>
+    <link rel="stylesheet" href="styles.css">
+
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+ h1 {
+    color: rgb(150, 223, 13);
+ }
+.container {
+    text-align: center;
+}
+
+.tank {
+    width: 150px;
+    height: 300px;
+    border: 5px solid #333;
+    border-radius: 10px;
+    position: relative;
+    margin: 20px auto;
+    background: #ccc;
+    overflow: hidden;
+}
+
+.lid, .base {
+    width: 100%;
+    height: 20px;
+    background-color: #555;
+    position: absolute;
+    left: 0;
+}
+
+.lid {
+    top: -10px;
+    border-radius: 10px 10px 0 0;
+}
+
+.base {
+    bottom: -10px;
+    border-radius: 0 0 10px 10px;
+}
+
+.water {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to top, #00aaff, #00d4ff);
+    border-radius: 0 0 10px 10px;
+    transition: height 0.3s;
+}
+
+.pipe {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    width: 40px;
+    height: 100px;
+    background-color: #777;
+    transform: translateX(-50%);
+    overflow: hidden;
+}
+
+.flow {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        #00aaff,
+        #00aaff 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: flow 1s linear infinite;
+    opacity: 0;
+}
+
+@keyframes flow {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.pump-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -40px;
+}
+
+.pump {
+    width: 60px;
+    height: 60px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+button.on {
+    background-color: green;
+    color: white;
+}
+
+button.off {
+    background-color: red;
+    color: white;
+}
+
+input[type="range"] {
+    width: 200px;
+    margin-top: 20px;
+}
+button:hover {
+  background-color: #f10aac;
+  color: white;
+}
+
+</style>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const water = document.getElementById('water');
+    const waterLevelInput = document.getElementById('waterLevel');
+    const levelDisplay = document.getElementById('levelDisplay');
+    const pumpButton = document.getElementById('pumpButton');
+    const pump = document.getElementById('pump');
+    const flow = document.getElementById('flow');
+    
+    let pumpOn = false;
+
+    function updateWaterLevel() {
+        const level = waterLevelInput.value;
+        water.style.height = `${level}%`;
+        levelDisplay.textContent = level;
+    }
+
+    function togglePump() {
+        pumpOn = !pumpOn;
+        if (pumpOn) {
+            pumpButton.textContent = 'Turn Pump Off';
+            pumpButton.classList.remove('off');
+            pumpButton.classList.add('on');
+            pump.style.filter = 'grayscale(0)';
+            flow.style.opacity = '1';
+        } else {
+            pumpButton.textContent = 'Turn Pump On';
+            pumpButton.classList.remove('on');
+            pumpButton.classList.add('off');
+            pump.style.filter = 'grayscale(1)';
+            flow.style.opacity = '0';
+        }
+    }
+
+    waterLevelInput.addEventListener('input', updateWaterLevel);
+    pumpButton.addEventListener('click', togglePump);
+
+    // Initial update
+    updateWaterLevel();
+    togglePump(); // Ensure initial state
+});
+
+
+    </script>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>JoJo Tank Water Level</h1>
+        <div class="tank">
+            <div class="lid"></div>
+            <div class="water" id="water"></div>
+            <div class="pipe">
+                <div class="flow" id="flow"></div>
+            </div>
+            <div class="base"></div>
+        </div>
+        <div class="pump-container">
+            <img src="pump.png" class="pump" id="pump" alt="Pump">
+            <button id="pumpButton">Turn Pump On</button>
+        </div>
+        <input type="range" id="waterLevel" min="0" max="100" value="50">
+        <p>Water Level: <span id="levelDisplay">50</span>%</p>
+    </div>
+</body>
+</html>
+
